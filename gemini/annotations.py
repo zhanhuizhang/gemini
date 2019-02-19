@@ -795,12 +795,17 @@ def get_gnomad_info(var, empty=GNOMAD_EMPTY):
             afs[grp] = float(ac) / float(an)
         if ac is None or an is None: continue
 
-        nhm = sum(map(int, info_map.get('GC_Male', '').split(",")[1:-1]))
-        nhf = sum(map(int, info_map.get('GC_Female', '').split(",")[1:-1]))
-
-        num_hets = nhm + nhf
-        num_homs = int(info_map.get("Hom", -1))
-
+        #nhm = sum(map(int, info_map.get('GC_Male', '').split(",")[1:-1]))
+        #nhf = sum(map(int, info_map.get('GC_Female', '').split(",")[1:-1]))
+        # 'GC_Male' and 'GC_Female'  were not found in gnomAD_v2.1.BCF       
+        
+        
+        #num_hets = nhm + nhf
+        #num_homs = int(info_map.get("Hom", -1))
+        #"Hom" has changed to "nhomalt" in gnomAD v2.1
+        num_homs = int(info_map.get('nhomalt', -1))
+        num_hets = int(info_map.get('AC', -1)) - 2*num_homs
+        #num_hems = int(info_map.get('AC_male', -1)) ,  hets_male in autosomal or hemizygous in chrX
         called_chroms = int(info_map.get('AN', -1))
 
         return GnomadInfo(aaf_ALL, float(afs['_afr']),
